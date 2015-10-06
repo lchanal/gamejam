@@ -13,18 +13,47 @@
 
         var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create: create });
 
+        var BOARD_COLS = 15;
+        var BOARD_ROWS = 10;
+        var SLOT_SIZE = 64;
+        var SLOT_SPACING = 2;
+        var SLOT_SIZE_SPACED = SLOT_SIZE + SLOT_SPACING;
+        
+        var trees;
+        
         function preload () {
-
-            game.load.image('logo', 'phaser.png');
+            game.load.spritesheet("TREES", "phaser.png", SLOT_SIZE, SLOT_SIZE );
+//              game.load.image('logo', 'phaser.png');
 
         }
 
         function create () {
+        	spawnBoard();
+        }
+        
+//         function setTreePos(tree,x,y) {
+//         	tree.posX = x;
+//             tree.posY = y;
+//         }
+        
+     // fill the screen with as many gems as possible
+        function spawnBoard() {
 
-            var logo = game.add.sprite(game.world.centerX, game.world.centerY, 'logo');
-            logo.anchor.setTo(0.5, 0.5);
+        	trees = game.add.group();
+	
+            for (var i = 0; i < BOARD_COLS; i++)
+            {
+                for (var j = 0; j < BOARD_ROWS; j++)
+                {
+                    var tree = trees.create(i * SLOT_SIZE_SPACED, j * SLOT_SIZE_SPACED, "TREES", 800);
+//                     tree.name = 'tree' + i.toString() + 'x' + j.toString();
+//                     setTreePos(tree, i, j); // each gem has a position on the board
+                }
+            }
 
         }
+        
+        
 
     };
 
