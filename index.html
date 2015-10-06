@@ -20,22 +20,66 @@
         var game = new Phaser.Game(BOARD_COLS * SLOT_SIZE_SPACED + 200, BOARD_ROWS * SLOT_SIZE_SPACED, Phaser.AUTO, '', { preload: preload, create: create });
 
         var trees;
+        var arrows;
+        var tools;
         var selectedTree = null;
+        var selectedTool = null;
+        var sTools = null;
         
         function preload () {
             game.load.spritesheet("TREES", "background.png", SLOT_SIZE, SLOT_SIZE, 5);
+            game.load.spritesheet("ARROWS", "arrow.png", 38, 30, 9);
+            game.load.spritesheet("AXE", "hache.png", 32, 28);
+            game.load.spritesheet("CHAIN", "tron.png", 54, 14);
+            game.load.spritesheet("SAXE", "hache_selected.png", 32, 28);
+            game.load.spritesheet("SCHAIN", "tron_selected.png", 54, 14);
+            game.load.bitmapFont("FONT", "font.png");
         }
 
         function create () {
+        	initBoard();
         	spawnBoard();
         }
         
 
         function selectTree(tree, pointer){
         	selectedTree = tree;
+        	console.log("before : " + tree.life);
+        	tree.life -= selectedTool.power;
+        	console.log("after : " + tree.life);
+        }
+        
+        function selectHache(hache, pointer){
+        	selectedTool = hache;
+        	console.log(selectedTool.power);
+        	//hache.lifespan = -1;
+        }
+        
+
+        
+        function selectTron(tronconneuse, pointer){
+        	selectedTool = tronconneuse;
+        	console.log(selectedTool.power);
+        	//tronconneuse.lifespan = 2;
         }
         
         function initBoard() {
+        	tools = game.add.group();
+        	
+        	var hache = tools.create(BOARD_COLS * SLOT_SIZE_SPACED + 50, 20,"AXE");
+        	hache.inputEnabled = true;
+        	hache.power = 1;
+        	hache.events.onInputDown.add(selectHache, this);
+        	
+//         	var scie = tools.create(BOARD_COLS * SLOT_SIZE_SPACED + 50, SLOT_SIZE + 20,"ee");
+//         	scie.inputEnabled = true;
+//         	scie.power = 2;
+//         	scie.events.onInputDown.add(selectScie, this);
+        	
+        	var tronconneuse = tools.create(BOARD_COLS * SLOT_SIZE_SPACED + 50, SLOT_SIZE * 2 + 20, "CHAIN");
+        	tronconneuse.inputEnabled = true;
+        	tronconneuse.power = 4;
+        	tronconneuse.events.onInputDown.add(selectTron, this);
         	
         }
         
@@ -43,16 +87,19 @@
         function spawnBoard() {
 
         	trees = game.add.group();
+        	arrows = game.add.group();
 	
             for (var i = 0; i < BOARD_COLS; i++){
                 for (var j = 0; j < BOARD_ROWS; j++){
                 	var treeHeight = game.rnd.integerInRange(1, 5);
-                	var treeDirection = game.rnd.integerInRange(0, 9);
+                	var treeDirection = game.rnd.integerInRange(0, 8);
                 	
                 	var tree = trees.create(i * SLOT_SIZE_SPACED + SLOT_SPACING / 2 , j * SLOT_SIZE_SPACED + SLOT_SPACING / 2, "TREES", treeHeight);
-                    
+                	var arrow = arrows.create(i * SLOT_SIZE_SPACED + SLOT_SPACING / 2 , j * SLOT_SIZE_SPACED + SLOT_SPACING / 2, "ARROWS", treeDirection);
+                	
                 	tree.treeHeight = treeHeight;
                     tree.direction = treeDirection;
+                    tree.life = treeHeight;
                     
                     tree.posX = i;
                     tree.posY = j;
