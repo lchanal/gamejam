@@ -17,19 +17,13 @@
         var SLOT_SPACING = 6;
         var SLOT_SIZE_SPACED = SLOT_SIZE + SLOT_SPACING;
         
-        var game = new Phaser.Game(BOARD_COLS * SLOT_SIZE_SPACED, BOARD_ROWS * SLOT_SIZE_SPACED, Phaser.AUTO, '', { preload: preload, create: create });
+        var game = new Phaser.Game(BOARD_COLS * SLOT_SIZE_SPACED + 200, BOARD_ROWS * SLOT_SIZE_SPACED, Phaser.AUTO, '', { preload: preload, create: create });
 
         var trees;
+        var selectedTree = null;
         
         function preload () {
-<<<<<<< HEAD
-            game.load.spritesheet("TREES", "blackground.png");
-			
-//              game.load.image('logo', 'phaser.png');
-
-=======
-            game.load.spritesheet("TREES", "blackground.png", SLOT_SIZE, SLOT_SIZE, 3);
->>>>>>> a7f819684f062b4da8b17c0407bf9b443b8585a3
+            game.load.spritesheet("TREES", "background.png", SLOT_SIZE, SLOT_SIZE, 5);
         }
 
         function create () {
@@ -37,26 +31,40 @@
         }
         
 
+        function selectTree(tree, pointer){
+        	selectedTree = tree;
+        }
         
-     // fill the screen with as many gems as possible
+        function initBoard() {
+        	
+        }
+        
+     // fill the screen with as many tree as possible
         function spawnBoard() {
 
         	trees = game.add.group();
 	
-            for (var i = 0; i < BOARD_COLS; i++)
-            {
-                for (var j = 0; j < BOARD_ROWS; j++)
-                {
-                    var tree = trees.create(i * SLOT_SIZE_SPACED + SLOT_SPACING / 2 , j * SLOT_SIZE_SPACED + SLOT_SPACING / 2, "TREES", 1);
-                    tree.treeHeight = game.rnd.integerInRange(1, 5);
-                    tree.direction = game.rnd.integerInRange(0, 9);
+            for (var i = 0; i < BOARD_COLS; i++){
+                for (var j = 0; j < BOARD_ROWS; j++){
+                	var treeHeight = game.rnd.integerInRange(1, 5);
+                	var treeDirection = game.rnd.integerInRange(0, 9);
+                	
+                	var tree = trees.create(i * SLOT_SIZE_SPACED + SLOT_SPACING / 2 , j * SLOT_SIZE_SPACED + SLOT_SPACING / 2, "TREES", treeHeight);
+                    
+                	tree.treeHeight = treeHeight;
+                    tree.direction = treeDirection;
+                    
                     tree.posX = i;
                     tree.posY = j;
+                    
+                    tree.inputEnabled = true;
+                    
+                    tree.events.onInputDown.add(selectTree, this);
                 }
             }
-
         }
         
+
         
 
     };
