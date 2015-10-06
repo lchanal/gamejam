@@ -11,30 +11,25 @@
 
     window.onload = function() {
 
-        var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create: create });
-
-        var BOARD_COLS = 15;
-        var BOARD_ROWS = 10;
+    	var BOARD_COLS = 10;
+        var BOARD_ROWS = 8;
         var SLOT_SIZE = 64;
-        var SLOT_SPACING = 2;
+        var SLOT_SPACING = 6;
         var SLOT_SIZE_SPACED = SLOT_SIZE + SLOT_SPACING;
         
+        var game = new Phaser.Game(BOARD_COLS * SLOT_SIZE_SPACED, BOARD_ROWS * SLOT_SIZE_SPACED, Phaser.AUTO, '', { preload: preload, create: create });
+
         var trees;
         
         function preload () {
-            game.load.spritesheet("TREES", "phaser.png", SLOT_SIZE, SLOT_SIZE );
-//              game.load.image('logo', 'phaser.png');
-
+            game.load.spritesheet("TREES", "blackground.png", SLOT_SIZE, SLOT_SIZE, 3);
         }
 
         function create () {
         	spawnBoard();
         }
         
-//         function setTreePos(tree,x,y) {
-//         	tree.posX = x;
-//             tree.posY = y;
-//         }
+
         
      // fill the screen with as many gems as possible
         function spawnBoard() {
@@ -45,9 +40,11 @@
             {
                 for (var j = 0; j < BOARD_ROWS; j++)
                 {
-                    var tree = trees.create(i * SLOT_SIZE_SPACED, j * SLOT_SIZE_SPACED, "TREES", 800);
-//                     tree.name = 'tree' + i.toString() + 'x' + j.toString();
-//                     setTreePos(tree, i, j); // each gem has a position on the board
+                    var tree = trees.create(i * SLOT_SIZE_SPACED + SLOT_SPACING / 2 , j * SLOT_SIZE_SPACED + SLOT_SPACING / 2, "TREES", 1);
+                    tree.treeHeight = game.rnd.integerInRange(1, 5);
+                    tree.direction = game.rnd.integerInRange(0, 9);
+                    tree.posX = i;
+                    tree.posY = j;
                 }
             }
 
